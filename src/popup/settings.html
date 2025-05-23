@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Website Automation - Settings</title>
+  <style>
+    body {
+      width: 400px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .back-button {
+      background-color: transparent;
+      color: #2196f3;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .back-button:hover {
+      background-color: #e3f2fd;
+      border-radius: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      background-color: white;
+    }
+
+    .save-button {
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .save-button:hover {
+      background-color: #1976d2;
+    }
+
+    .message {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .message.success {
+      background-color: #e8f5e9;
+      color: #1b5e20;
+    }
+
+    .message.error {
+      background-color: #ffebee;
+      color: #b71c1c;
+    }
+
+    .api-key-input {
+      display: none;
+    }
+
+    .api-key-input.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>Settings</h2>
+    <button id="backButton" class="back-button">← Back</button>
+  </div>
+
+  <form id="settingsForm">
+    <div class="form-group">
+      <label for="provider">AI Provider</label>
+      <select id="provider">
+        <option value="openai">OpenAI</option>
+        <option value="groq">Groq</option>
+      </select>
+    </div>
+
+    <div id="openaiKeyInput" class="api-key-input">
+      <div class="form-group">
+        <label for="openaiKey">OpenAI API Key</label>
+        <input type="text" id="openaiKey" placeholder="Enter your OpenAI API key">
+      </div>
+    </div>
+
+    <div id="groqKeyInput" class="api-key-input">
+      <div class="form-group">
+        <label for="groqKey">Groq API Key</label>
+        <input type="text" id="groqKey" placeholder="Enter your Groq API key">
+      </div>
+    </div>
+
+    <button type="submit" class="save-button">Save Settings</button>
+  </form>
+
+  <div id="message" class="message"></div>
+
+  <script type="module" src="./settings.js"></script>
+</body>
+</html> 
