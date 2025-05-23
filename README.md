@@ -1,7 +1,7 @@
 # AutoMatey
 
 <div align="center">
-  <img src="assets/demo.jpg" alt="AutoMatey Screenshot" width="300"/>
+  <img src="assets/demo.gif" alt="AutoMatey Screenshot" width="300"/>
   <br/>
   <em>A modern popup UI for automating website tasks with AI.</em>
 </div>
