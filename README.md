@@ -1,8 +1,25 @@
-# Website Automation Chrome Extension
+# AutoMatey
 
-![Screenshot](assets/demo.jpg)  
+<div align="center">
+  <img src="assets/demo.jpg" alt="AutoMatey Screenshot" width="300"/>
+  <br/>
+  <em>A modern popup UI for automating website tasks with AI.</em>
+</div>
 
 A Chrome extension that uses AI to automate website tasks based on natural language instructions. The extension provides a modern, user-friendly interface for automating web interactions.
+
+## Table of Contents
+
+- [Features](#features)
+- [UI Features](#ui-features)
+- [Project Structure](#project-structure)
+- [Setup](#setup)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Development](#development)
+- [Contributing](#contributing)
+- [Support](#support)
+- [License](#license)
 
 ## Features
 
