@@ -6,6 +6,47 @@ document.getElementById('settingsButton').addEventListener('click', () => {
   window.location.href = 'settings.html';
 });
 
+// Character counter functionality
+const textarea = document.getElementById('userPrompt');
+const charCounter = document.getElementById('charCount');
+const MAX_CHARS = 500;
+
+textarea.addEventListener('input', () => {
+  const remaining = textarea.value.length;
+  charCounter.textContent = remaining;
+  
+  if (remaining > MAX_CHARS) {
+    textarea.value = textarea.value.substring(0, MAX_CHARS);
+    charCounter.textContent = MAX_CHARS;
+  }
+  
+  // Update counter color based on remaining characters
+  if (remaining > MAX_CHARS * 0.9) {
+    charCounter.style.color = '#f44336';
+  } else if (remaining > MAX_CHARS * 0.7) {
+    charCounter.style.color = '#ff9800';
+  } else {
+    charCounter.style.color = '#666';
+  }
+});
+
+// Loading state management
+function setLoading(isLoading) {
+  const submitButton = document.querySelector('#automationForm button[type="submit"]');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const buttonText = submitButton.querySelector('span');
+  
+  if (isLoading) {
+    submitButton.disabled = true;
+    loadingSpinner.style.display = 'block';
+    buttonText.textContent = 'Processing...';
+  } else {
+    submitButton.disabled = false;
+    loadingSpinner.style.display = 'none';
+    buttonText.textContent = 'Automate';
+  }
+}
+
 // Listen for messages from background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   debugLog('Popup received message:', message);
@@ -16,6 +57,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break;
     case 'showExtractedData':
       showExtractedData(message.data);
+      break;
+    case 'automationComplete':
+      setLoading(false);
       break;
     default:
       errorLog('Unknown message type:', message.type);
@@ -31,6 +75,12 @@ function showMessage(message, type = MessageType.INFO) {
   
   // Auto-scroll to the new message
   messageElement.scrollIntoView({ behavior: 'smooth' });
+  
+  // Remove old messages if there are more than 5
+  const messages = messagesDiv.getElementsByClassName('message');
+  while (messages.length > 5) {
+    messages[0].remove();
+  }
 }
 
 function showExtractedData(data) {
@@ -122,6 +172,8 @@ document.getElementById('automationForm').addEventListener('submit', async (e) =
   }
 
   try {
+    setLoading(true);
+    
     // Get the current tab
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     debugLog('Current tab:', tabs[0]);
@@ -148,11 +200,13 @@ document.getElementById('automationForm').addEventListener('submit', async (e) =
     }, (response) => {
       if (chrome.runtime.lastError) {
         showMessage(chrome.runtime.lastError.message, 'error');
+        setLoading(false);
         return;
       }
       
       if (!response || !response.success) {
         showMessage(response?.error || 'Failed to get automation instructions', 'error');
+        setLoading(false);
         return;
       }
       
@@ -161,5 +215,6 @@ document.getElementById('automationForm').addEventListener('submit', async (e) =
   } catch (error) {
     errorLog('Error in form submission:', error);
     showMessage(error.message, 'error');
+    setLoading(false);
   }
 }); 

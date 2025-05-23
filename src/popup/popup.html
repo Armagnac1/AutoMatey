@@ -4,96 +4,208 @@
   <meta charset="UTF-8">
   <title>Website Automation</title>
   <style>
+    :root {
+      --primary-color: #2196f3;
+      --primary-hover: #1976d2;
+      --secondary-color: #757575;
+      --secondary-hover: #616161;
+      --success-color: #4caf50;
+      --warning-color: #ff9800;
+      --error-color: #f44336;
+      --info-color: #2196f3;
+      --background-color: #ffffff;
+      --text-color: #333333;
+      --border-radius: 8px;
+      --transition-speed: 0.2s;
+    }
+
     body {
       width: 400px;
-      padding: 16px;
+      padding: 20px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
     }
     
     .container {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
     }
     
     #messages {
-      max-height: 100px;
+      max-height: 150px;
       overflow-y: auto;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      padding-right: 8px;
+    }
+    
+    #messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    #messages::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    
+    #messages::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 3px;
     }
     
     .message {
-      padding: 8px;
-      margin-bottom: 8px;
-      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: var(--border-radius);
+      animation: slideIn 0.3s ease-out;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     
     .message.info {
       background-color: #e3f2fd;
-      color: #0d47a1;
+      color: var(--info-color);
+      border-left: 4px solid var(--info-color);
     }
     
     .message.success {
       background-color: #e8f5e9;
-      color: #1b5e20;
+      color: var(--success-color);
+      border-left: 4px solid var(--success-color);
     }
     
     .message.warning {
       background-color: #fff3e0;
-      color: #e65100;
+      color: var(--warning-color);
+      border-left: 4px solid var(--warning-color);
     }
     
     .message.error {
       background-color: #ffebee;
-      color: #b71c1c;
+      color: var(--error-color);
+      border-left: 4px solid var(--error-color);
     }
     
     #data {
-      margin-top: 16px;
+      margin-top: 20px;
       padding: 16px;
-      background-color: #f5f5f5;
-      border-radius: 4px;
+      background-color: #f8f9fa;
+      border-radius: var(--border-radius);
+      border: 1px solid #e9ecef;
     }
     
     #data h3 {
       margin-top: 0;
-      color: #333;
+      color: var(--text-color);
+      font-size: 16px;
+      font-weight: 600;
     }
     
     form {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 12px;
+    }
+    
+    .textarea-container {
+      position: relative;
     }
     
     textarea {
       width: 100%;
-      min-height: 80px;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      min-height: 100px;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: var(--border-radius);
       resize: vertical;
+      font-size: 14px;
+      transition: border-color var(--transition-speed);
+      box-sizing: border-box;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+    
+    .char-counter {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      font-size: 12px;
+      color: #666;
     }
     
     button {
-      padding: 8px 16px;
-      background-color: #2196f3;
+      padding: 12px 20px;
+      background-color: var(--primary-color);
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: var(--border-radius);
       cursor: pointer;
+      font-weight: 500;
+      transition: all var(--transition-speed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     
     button:hover {
-      background-color: #1976d2;
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+      transform: none;
     }
     
     #settingsButton {
-      background-color: #757575;
+      background-color: var(--secondary-color);
     }
     
     #settingsButton:hover {
-      background-color: #616161;
+      background-color: var(--secondary-hover);
+    }
+
+    .loading {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .button-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
   </style>
 </head>
@@ -102,11 +214,23 @@
     <div id="messages"></div>
     
     <form id="automationForm">
-      <textarea id="userPrompt" placeholder="Describe what you want to automate..."></textarea>
-      <button type="submit">Automate</button>
+      <div class="textarea-container">
+        <textarea id="userPrompt" placeholder="Describe what you want to automate..."></textarea>
+        <div class="char-counter"><span id="charCount">0</span>/500</div>
+      </div>
+      <button type="submit">
+        <div class="button-content">
+          <span>Automate</span>
+          <div class="loading" id="loadingSpinner"></div>
+        </div>
+      </button>
     </form>
     
-    <button id="settingsButton">Settings</button>
+    <button id="settingsButton">
+      <div class="button-content">
+        <span>Settings</span>
+      </div>
+    </button>
     
     <div id="data"></div>
   </div>
